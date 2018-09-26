@@ -117,25 +117,34 @@ namespace AStar
 
         internal List<Node> GetNeighbours(Node node)
         {
-            var nn = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X && neighbour.Y == node.Y - 1 && node.Y - 1 >= 0);
-            var en = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X + 1 && neighbour.Y == node.Y && node.X + 1 < Width);
-            var sn = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X && neighbour.Y == node.Y + 1 && node.Y + 1 < Height);
-            var wn = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X - 1 && neighbour.Y == node.Y && node.X - 1 >= 0);
+            var nn = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X && neighbour.Y == node.Y - 1);
+            var en = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X + 1 && neighbour.Y == node.Y);
+            var sn = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X && neighbour.Y == node.Y + 1);
+            var wn = Nodes.FirstOrDefault(neighbour => neighbour.X == node.X - 1 && neighbour.Y == node.Y);
 
             var neighbours = new List<Node>();
 
-            if(nn != null) neighbours.Add(nn);
-            if(en != null) neighbours.Add(en);
-            if(sn != null) neighbours.Add(sn);
-            if(wn != null) neighbours.Add(wn);
+            if(nn != null && IsPassable(nn) && InBounds(nn)) neighbours.Add(nn);
+            if(en != null && IsPassable(en) && InBounds(en)) neighbours.Add(en);
+            if(sn != null && IsPassable(sn) && InBounds(sn)) neighbours.Add(sn);
+            if(wn != null && IsPassable(wn) && InBounds(wn)) neighbours.Add(wn);
 
             return neighbours;
         }
 
+        bool IsPassable(Node node)
+        {
+            return node.Cost == 1;
+        }
+
+        public bool InBounds(Node node)
+        {
+            return 0 <= node.X && node.X < Width && 0 <= node.Y && node.Y < Height;
+        }
+
         internal int Cost(Node nodeA, Node nodeB)
         {
-            //return Math.Abs(nodeA.Cost - nodeB.Cost);
-            return nodeB.Cost == 0 ? Int16.MaxValue : 1;
+            return 1;
         }        
     }
 
